@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookVerse - Modern Book Catalog</title>
+    <link rel="stylesheet" href="bookverse.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <p>Loading BookVerse...</p>
+    </div>
+
+    <nav class="navbar">
+        <div class="logo">BookVerse</div>
+        <div class="navbar-links">
+            <a href="#home" onclick="router.navigate('home')">Home</a>
+            <a href="#catalog" onclick="router.navigate('catalog')">Catalog</a>
+            <a href="#dashboard" onclick="router.navigate('dashboard')">Dashboard</a>
+        </div>
+        <div class="navbar-auth">
+            <span id="user-display"></span>
+            <button id="auth-button"></button>
+            <button id="dark-mode-toggle"><i class="fas fa-moon"></i></button>
+            <div class="cart-icon-container" onclick="router.navigate('cart')">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-item-count" class="cart-badge">0</span>
+            </div>
+        </div>
+    </nav>
+
+    <main id="spa-container">
+        
+        <section id="home" class="spa-section active">
+            <h2>Welcome to BookVerse!</h2>
+            <p class="section-description">Discover your next read by exploring popular genres below.</p>
+            <div id="genre-tiles-container" class="genre-grid">
+                </div>
+
+            <h3 style="margin-top: 40px; text-align: center;">Recently Viewed Books</h3>
+            <div id="recently-viewed-container" class="book-catalog-grid">
+                </div>
+        </section>
+
+        <section id="catalog" class="spa-section">
+            <h2 class="section-header"><i class="fas fa-book-open"></i> Book Catalog</h2>
+            <div class="filter-controls">
+                <label for="genre-filter">Genre:</label>
+                <select id="genre-filter">
+                    <option value="all">All Genres</option>
+                    </select>
+
+                <label for="price-range">Max Price:</label>
+                <input type="range" id="price-range" min="10" max="30" value="30" step="0.5">
+                <span id="price-value"></span>
+                
+                <label for="sort-by">Sort By:</label>
+                <select id="sort-by">
+                    <option value="popularity">Popularity</option>
+                    <option value="newest">Newest</option>
+                    <option value="price-asc">Price (Low to High)</option>
+                    <option value="price-desc">Price (High to Low)</option>
+                </select>
+                
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Search title or author...">
+                    <button id="search-button" class="cta-button small"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            
+            <div id="catalog-loader" class="loader-overlay hidden">
+                <div class="loader"></div>
+            </div>
+            
+            <div id="book-catalog-container" class="book-catalog-grid">
+                </div>
+        </section>
+        
+        <section id="book-details" class="spa-section">
+            <h2 class="section-header"><i class="fas fa-info-circle"></i> Book Details</h2>
+            <div id="book-details-content" class="book-details-layout">
+                </div>
+            
+            <div class="details-section">
+                <h3>Customer Reviews</h3>
+                <div id="reviews-list">
+                    </div>
+                <div class="review-form-container">
+                    <h4>Add Your Review</h4>
+                    <form id="add-review-form">
+                        <div class="form-group">
+                            <label>Rating:</label>
+                            <div id="new-review-rating" class="star-rating-input">
+                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="review-comment">Comment:</label>
+                            <textarea id="review-comment" required minlength="10"></textarea>
+                        </div>
+                        <button type="submit" class="cta-button small">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h3>Related Books</h3>
+                <div id="related-books-container" class="book-catalog-grid">
+                    </div>
+            </div>
+        </section>
+
+        <section id="cart" class="spa-section">
+            <h2 class="section-header"><i class="fas fa-shopping-cart"></i> Your Cart</h2>
+            
+            <div id="cart-empty-state" class="empty-state" style="display: none;">
+                <p>Your cart is empty. Why not explore our catalog?</p>
+                <button class="cta-button large" onclick="router.navigate('catalog')">Start Shopping</button>
+            </div>
+            
+            <div id="cart-content" class="cart-layout">
+                <div id="cart-items-container" class="cart-items">
+                    </div>
+                <div class="cart-summary">
+                    <h3>Order Summary</h3>
+                    <div id="cart-summary">
+                        </div>
+                    <button id="checkout-button" class="cta-button large" disabled>Proceed to Checkout</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="checkout" class="spa-section">
+            <h2 class="section-header"><i class="fas fa-money-check-alt"></i> Checkout</h2>
+            <div class="checkout-layout">
+                <form id="checkout-form" class="checkout-form">
+                    <h3>Shipping Information</h3>
+                    <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Shipping Address</label>
+                        <textarea id="address" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <h3>Payment Details (Mock)</h3>
+                    <div class="form-group">
+                        <label for="card-number">Card Number</label>
+                        <input type="text" id="card-number" pattern="\d{16}" placeholder="16 digits" required>
+                    </div>
+                    <div class="form-group-inline">
+                        <div class="form-group">
+                            <label for="expiry">Expiry (MM/YY)</label>
+                            <input type="text" id="expiry" pattern="\d{2}/\d{2}" placeholder="01/26" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" pattern="\d{3}" placeholder="123" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="cta-button large checkout-final-btn">Place Order</button>
+                </form>
+
+                <div class="checkout-summary">
+                    <h3>Order Total</h3>
+                    <div id="checkout-total-summary">
+                        </div>
+                    <p class="note">Note: This is a mock checkout. No real payment will be processed.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="dashboard" class="spa-section">
+            <h2 class="section-header"><i class="fas fa-chart-line"></i> Dashboard Analytics</h2>
+            
+            <div class="dashboard-stats-grid">
+                <div class="stat-card">
+                    <p>Total Books in Catalog</p>
+                    <div id="dash-total-books" class="stat-value">0</div>
+                </div>
+                <div class="stat-card">
+                    <p>Total Revenue (Approx.)</p>
+                    <div id="dash-total-sales" class="stat-value">₹0.00</div>
+                </div>
+                <div class="stat-card">
+                    <p>Most Popular Genre</p>
+                    <div id="dash-popular-genre" class="stat-value">N/A</div>
+                </div>
+            </div>
+
+            <div class="dashboard-chart-container">
+                <h3>Genre Sales Breakdown (Units Sold)</h3>
+                <div id="genre-sales-chart" class="chart-area">
+                    </div>
+            </div>
+            
+            <div class="details-section">
+                <h3>Your Recent Activity</h3>
+                <ul id="dash-recent-views" class="recent-views-list">
+                    </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="overlay" class="overlay">
+        <div id="popup-content" class="popup-content"></div>
+    </div>
+
+    <script src="bookverse.js"></script>
+</body>
+</html>
